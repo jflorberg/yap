@@ -1,17 +1,6 @@
-# Yet Another Printer (Yap)
-
-Yet Another Printer (Yap) is a log package for go.
-
-## Import
-
-`go get github.com/jflorberg/yap`
-
-## Snippet
-
-Initialize the logger with configuration and set as default
-
-```go
 package main
+
+import "github.com/jflorberg/yap/pkg/yap"
 
 func init() {
 	cfg := &yap.Config{
@@ -27,4 +16,3 @@ func main() {
 	yap.Warning("This is a warning")
 	yap.Error("Something went wrong")
 }
-```
