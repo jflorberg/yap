@@ -4,7 +4,7 @@ import "github.com/jflorberg/yap"
 
 func init() {
 	cfg := &yap.Config{
-		UseTimestamp:      false,
+		UseTimestamp:      true,
 		UseCallerFile:     true,
 		UseSeverityColors: true,
 		UseSeverityStyles: true,
@@ -18,12 +18,12 @@ func main() {
 	yap.Info("App started")
 	yap.Warn("This is a warning")
 	yap.Error("Something went wrong")
-	test123123()
+	thisIsAFunc()
 
 	yap.Fatal("This is fatal")
 }
 
-func test123123() {
+func thisIsAFunc() {
 	yap.Debug("This is debug trace")
 	yap.Debugf("This is debug trace: %s:%2f:%d", "with formatting", 10.25, 80)
 	yap.Print("Test Print")

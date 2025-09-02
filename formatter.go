@@ -46,7 +46,7 @@ func (y *Yap) output(severity *severity.Severity, v ...any) {
 
 	// build final msg
 	msg := fmt.Sprint(v...)
-	output := prefix + ": " + msg + "\n"
+	output := fmt.Sprintf("%s: %s \n", prefix, msg)
 
 	_, _ = y.out.Write([]byte(output))
 }
