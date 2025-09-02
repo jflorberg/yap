@@ -15,8 +15,11 @@ package main
 
 func init() {
 	cfg := &yap.Config{
-		Timestamp: false,
-		Caller:    true,
+		UseTimestamp:      true,
+		UseCallerFile:     true,
+		UseSeverityColors: true,
+		UseSeverityStyles: true,
+		UseCalledFunc:     true,
 	}
 	log := yap.New(cfg)
 	yap.SetDefault(log)
