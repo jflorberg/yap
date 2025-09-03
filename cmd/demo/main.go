@@ -1,6 +1,11 @@
 package main
 
-import "github.com/jflorberg/yap"
+import (
+	"github.com/jflorberg/yap"
+	"github.com/jflorberg/yap/color"
+	"github.com/jflorberg/yap/style"
+	"github.com/jflorberg/yap/symbols"
+)
 
 func init() {
 	cfg := &yap.Config{
@@ -15,16 +20,19 @@ func init() {
 }
 
 func main() {
-	yap.Info("App started")
+	yap.Info("App started", symbols.Rocket)
 	yap.Warn("This is a warning")
 	yap.Error("Something went wrong")
 	thisIsAFunc()
+
+	yap.Print(color.Blue("Blue output"))
+	yap.Print(style.Bold(color.Blue("Bold blue output")))
 
 	yap.Fatal("This is fatal")
 }
 
 func thisIsAFunc() {
 	yap.Debug("This is debug trace")
-	yap.Debugf("This is debug trace: %s:%2f:%d", "with formatting", 10.25, 80)
-	yap.Print("Test Print")
+	yap.Debugf("This is %s with %s", "a debug trace", "with formatting")
+	yap.Print("This is a regular print")
 }

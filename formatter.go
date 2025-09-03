@@ -5,13 +5,21 @@ import (
 	"runtime"
 	"time"
 
-	"github.com/jflorberg/yap/pkg/color"
-	"github.com/jflorberg/yap/pkg/severity"
-	"github.com/jflorberg/yap/pkg/style"
+	"github.com/jflorberg/yap/internal/severity"
 )
 
 // internal formatter
 func (y *Yap) output(severity *severity.Severity, v ...any) {
+	prefix := y.constructPrefix(severity)
+
+	// build final msg
+	msg := fmt.Sprint(v...)
+	output := fmt.Sprintf("%s: %s \n", prefix, msg)
+
+	_, _ = y.out.Write([]byte(output))
+}
+
+func (y *Yap) constructPrefix(severity *severity.Severity) string {
 	var prefix string
 
 	// timestamp
@@ -21,7 +29,7 @@ func (y *Yap) output(severity *severity.Severity, v ...any) {
 
 	// caller
 	if y.cfg.UseCallerFile {
-		pc, file, line, ok := runtime.Caller(2) // 2 = skip this + caller
+		pc, file, line, ok := runtime.Caller(3) // 3 = skip this + caller
 		if ok {
 			prefix += fmt.Sprintf("%s:%d ", shortFile(file), line)
 		}
@@ -34,21 +42,20 @@ func (y *Yap) output(severity *severity.Severity, v ...any) {
 		}
 	}
 
+	// severity
 	if severity != nil {
 		if y.cfg.UseSeverityStyles && y.cfg.UseSeverityColors {
-			prefix += fmt.Sprintf("[%s] ", style.StyleText(severity.Style, color.ColorText(severity.Color, severity.Name)))
+			prefix += fmt.Sprintf("[%s] ", severity.Style.Apply(severity.Color.Apply(severity.Name)))
 		} else if y.cfg.UseSeverityColors {
-			prefix += fmt.Sprintf("[%s] ", color.ColorText(severity.Color, severity.Name))
+			prefix += fmt.Sprintf("[%s] ", severity.Color.Apply(severity.Name))
+		} else if y.cfg.UseSeverityStyles {
+			prefix += fmt.Sprintf("[%s] ", severity.Style.Apply(severity.Name))
 		} else {
 			prefix += fmt.Sprintf("[%s] ", severity.Name)
 		}
 	}
 
-	// build final msg
-	msg := fmt.Sprint(v...)
-	output := fmt.Sprintf("%s: %s \n", prefix, msg)
-
-	_, _ = y.out.Write([]byte(output))
+	return prefix
 }
 
 // utility: strip path, keep only file name

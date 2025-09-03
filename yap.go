@@ -5,7 +5,7 @@ import (
 	"io"
 	"os"
 
-	"github.com/jflorberg/yap/pkg/severity"
+	"github.com/jflorberg/yap/internal/severity"
 )
 
 // Yap is the main logger instance
@@ -106,11 +106,5 @@ func Fatal(v ...any) {
 // Fatalf is equivalent to [Printf] followed by a call to [os.Exit](1).
 func Fatalf(format string, v ...any) {
 	std.output(&severity.Fatal, fmt.Sprintf(format, v...))
-	os.Exit(1)
-}
-
-// Fatalln is equivalent to [Println] followed by a call to [os.Exit](1).
-func Fatalln(v ...any) {
-	std.output(&severity.Fatal, fmt.Sprintln(v...))
 	os.Exit(1)
 }
