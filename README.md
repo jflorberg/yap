@@ -11,6 +11,7 @@
 - 🔧 Function name tracing
 - 🎨 Severity colors, styles and symbols
 - ⚡ Simple API (`yap.Info("...")`)
+- 🧩 Instance-based loggers for flexible configurations
 
 ---
 
@@ -22,7 +23,9 @@ go get github.com/jflorberg/yap
 
 ## 🚀 Quick Start
 
-Initialize the logger with configuration and set it as the default:
+### Global logger (default behavior)
+
+Initialize a logger and set it as the package default:
 
 ```go
 package main
@@ -39,14 +42,57 @@ func init() {
 		UseSeverityColors: true,
 		UseSeverityStyles: true,
 	}
+
 	log := yap.New(cfg)
 	yap.SetDefault(log)
 }
 
 func main() {
 	yap.Info("App started")
-	yap.Warning("This is a warning")
+	yap.Warn("This is a warning")
 	yap.Error("Something went wrong")
+}
+```
+
+### 🧩 Instance-based logger
+
+You can also create independent logger instances with different configurations.
+
+This is useful when different parts of your application require different logging styles (for example HTTP request logs vs application logs).
+
+```go
+package main
+
+import (
+	"github.com/jflorberg/yap"
+)
+
+func main() {
+
+	httpLogger := yap.New(&yap.Config{
+		UseTimestamp:      true,
+		UseCallerFile:     false,
+		UseCalledFunc:     false,
+		UseSeverityColors: true,
+		UseSeverityStyles: false,
+	})
+
+	httpLogger.Infof("GET /api/characters 200 12ms")
+}
+```
+
+This logger does not affect the global default logger used by `yap.Info()` and friends.
+
+## ⚙️ Configuration
+
+```go
+type Config struct {
+	Output            io.Writer // default: os.Stdout
+	UseTimestamp      bool      // include timestamp
+	UseCallerFile     bool      // include file:line
+	UseCalledFunc     bool      // include function name
+	UseSeverityColors bool      // include colors for severity
+	UseSeverityStyles bool      // include styles for severity
 }
 ```
 
